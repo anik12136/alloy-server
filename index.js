@@ -26,7 +26,28 @@ const client = new MongoClient(uri, {
 async function run() {
     try {
 
-        const demoData = client.db('alloy').collection('demo');
+        const demoCourses = client.db('alloy').collection('demo');
+        const communityPost = client.db('alloy').collection('community');
+
+
+        // Demo course .....api
+        app.get('/demoCourses', async (req, res) => {
+            const result = await demoCourses.find().toArray();
+            res.send(result);
+        })
+
+        // insert communityPost to database 
+        app.post('/communityPost', async (req, res) => {
+            const newPost = req.body;
+            const result = await communityPost.insertOne(newPost);
+            res.send(result);
+        })
+
+        // communityPost get
+        app.get('/communityPost', async (req, res) => {
+            const result = await communityPost.find().toArray();
+            res.send(result);
+        })
 
         // Send a ping to confirm a successful connection
         await client.db("admin").command({ ping: 1 });
